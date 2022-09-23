@@ -15,7 +15,7 @@ while echo "$(kubectl get services)" | grep -q "pending"; do
    sleep 1
    echo "Waiting for Service to be ready......................."
 done
-read -p 'Check "Create a Kubernetes Service"' CONTINUE
+echo 'Check "Create a Kubernetes Service"'
 echo "Type Y to confirme cluster deletion"
 gcloud container clusters delete lab-cluster 
 echo 'Check "Delete the cluster"'
