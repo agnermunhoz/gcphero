@@ -2,12 +2,12 @@
 gcloud auth list
 read -p 'Enter compute zone: ' ZONE
 gcloud config set compute/zone $ZONE
-gsutil -m cp -r gs://spls/gsp053/orchestrate-with-kubernetes .
-cd orchestrate-with-kubernetes/kubernetes
+gsutil -m cp -r gs://spls/gsp053/orchestrate-with-kubernetes . &
 gcloud container clusters create bootcamp \
   --machine-type e2-small \
   --num-nodes 3 \
   --scopes "https://www.googleapis.com/auth/projecthosting,storage-rw"
+cd orchestrate-with-kubernetes/kubernetes
 sed -i s,auth:2.0.0,auth:1.0.0,g deployments/auth.yaml
 kubectl create -f deployments/auth.yaml
 kubectl create -f services/auth.yaml
