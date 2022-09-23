@@ -1,7 +1,7 @@
 #!/bin/bash
-read -p 'Enter compute region' REGION
+read -p 'Enter compute region: ' REGION
 gcloud config set compute/region $REGION
-read -p 'Enter compute zone' ZONE
+read -p 'Enter compute zone: ' ZONE
 gcloud config set compute/zone $REGION-$ZONE
 gcloud container clusters create --machine-type=e2-medium --zone=$REGION-$ZONE lab-cluster 
 read -p 'Check "Create a GKE cluster"' CONTINUE
