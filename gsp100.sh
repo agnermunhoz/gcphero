@@ -1,6 +1,8 @@
 #!/bin/bash
-gcloud config set compute/region us-central1
-gcloud config set compute/zone us-central1-a
+read -p 'Enter compute region' REGION
+gcloud config set compute/region $REGION
+read -p 'Enter compute zone' ZONE
+gcloud config set compute/zone $REGION-$ZONE
 gcloud container clusters create --machine-type=e2-medium --zone= lab-cluster 
 read -p 'Check "Create a GKE cluster"' CONTINUE
 gcloud container clusters get-credentials lab-cluster 
