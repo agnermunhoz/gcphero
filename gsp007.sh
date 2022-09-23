@@ -44,7 +44,7 @@ gcloud compute addresses create network-lb-ip-1 \
 gcloud compute http-health-checks create basic-check &
 wait
 gcloud compute target-pools create www-pool \
-    --region $REGION --http-health-check basic-check &
+    --region $REGION --http-health-check basic-check
 gcloud compute target-pools add-instances www-pool \
     --instances www1,www2,www3 
 gcloud compute forwarding-rules create www-rule \
