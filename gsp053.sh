@@ -1,5 +1,6 @@
 #!/bin/bash
-gcloud config set compute/zone $1
+read -p 'Enter compute zone' ZONE
+gcloud config set compute/zone $ZONE
 gsutil -m cp -r gs://spls/gsp053/orchestrate-with-kubernetes .
 cd orchestrate-with-kubernetes/kubernetes
 gcloud container clusters create bootcamp \
