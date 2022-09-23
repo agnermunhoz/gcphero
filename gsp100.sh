@@ -3,7 +3,7 @@ read -p 'Enter compute region' REGION
 gcloud config set compute/region $REGION
 read -p 'Enter compute zone' ZONE
 gcloud config set compute/zone $REGION-$ZONE
-gcloud container clusters create --machine-type=e2-medium --zone= lab-cluster 
+gcloud container clusters create --machine-type=e2-medium --zone=$REGION-$ZONE lab-cluster 
 read -p 'Check "Create a GKE cluster"' CONTINUE
 gcloud container clusters get-credentials lab-cluster 
 kubectl create deployment hello-server --image=gcr.io/google-samples/hello-app:1.0
