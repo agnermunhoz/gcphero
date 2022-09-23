@@ -1,4 +1,5 @@
 #!/bin/bash
+gcloud auth list
 read -p 'Enter compute zone: ' ZONE
 gcloud config set compute/zone $ZONE
 gsutil -m cp -r gs://spls/gsp053/orchestrate-with-kubernetes .
