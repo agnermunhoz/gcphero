@@ -14,7 +14,7 @@ gcloud compute instances create www1 \
       apt-get update
       apt-get install apache2 -y
       service apache2 restart
-      echo "<h3>Web Server: www1</h3>" | tee /var/www/html/index.html'
+      echo "<h3>Web Server: www1</h3>" | tee /var/www/html/index.html' &
 gcloud compute instances create www2 \
     --zone=$ZONE \
     --tags=network-lb-tag \
@@ -25,7 +25,7 @@ gcloud compute instances create www2 \
       apt-get update
       apt-get install apache2 -y
       service apache2 restart
-      echo "<h3>Web Server: www2</h3>" | tee /var/www/html/index.html'
+      echo "<h3>Web Server: www2</h3>" | tee /var/www/html/index.html' &
 gcloud compute instances create www3 \
     --zone=$ZONE \
     --tags=network-lb-tag \
@@ -36,23 +36,22 @@ gcloud compute instances create www3 \
       apt-get update
       apt-get install apache2 -y
       service apache2 restart
-      echo "<h3>Web Server: www3</h3>" | tee /var/www/html/index.html'
+      echo "<h3>Web Server: www3</h3>" | tee /var/www/html/index.html' &
 gcloud compute firewall-rules create www-firewall-network-lb \
-    --target-tags network-lb-tag --allow tcp:80
-echo "CHECK Create multiple web server instances"
+    --target-tags network-lb-tag --allow tcp:80 &
 gcloud compute addresses create network-lb-ip-1 \
-    --region $REGION
-gcloud compute http-health-checks create basic-check
+    --region $REGION &
+gcloud compute http-health-checks create basic-check &
+wait
 gcloud compute target-pools create www-pool \
-    --region $REGION --http-health-check basic-check
+    --region $REGION --http-health-check basic-check &
 gcloud compute target-pools add-instances www-pool \
-    --instances www1,www2,www3    
+    --instances www1,www2,www3 
 gcloud compute forwarding-rules create www-rule \
     --region $REGION \
     --ports 80 \
     --address network-lb-ip-1 \
-    --target-pool www-pool
-echo "CHECK Configure the load balancing service"
+    --target-pool www-pool &
 gcloud compute instance-templates create lb-backend-template \
    --region=$REGION \
    --network=default \
@@ -70,21 +69,23 @@ gcloud compute instance-templates create lb-backend-template \
      http://169.254.169.254/computeMetadata/v1/instance/name)"
      echo "Page served from: $vm_hostname" | \
      tee /var/www/html/index.html
-     systemctl restart apache2'
+     systemctl restart apache2' &
+wait
 gcloud compute instance-groups managed create lb-backend-group \
-   --template=lb-backend-template --size=2 --zone=$ZONE
+   --template=lb-backend-template --size=2 --zone=$ZONE &
 gcloud compute firewall-rules create fw-allow-health-check \
   --network=default \
   --action=allow \
   --direction=ingress \
   --source-ranges=130.211.0.0/22,35.191.0.0/16 \
   --target-tags=allow-health-check \
-  --rules=tcp:80
+  --rules=tcp:80 &
 gcloud compute addresses create lb-ipv4-1 \
   --ip-version=IPV4 \
-  --global
+  --global &
 gcloud compute health-checks create http http-basic-check \
-  --port 80
+  --port 80 &
+wait
 gcloud compute backend-services create web-backend-service \
   --protocol=HTTP \
   --port-name=http \
@@ -92,8 +93,8 @@ gcloud compute backend-services create web-backend-service \
   --global
 gcloud compute backend-services add-backend web-backend-service \
   --instance-group=lb-backend-group \
-  --instance-group-zone= \
-  --global
+  --instance-group-zone=$ZONE \
+  --global 
 gcloud compute url-maps create web-map-http \
     --default-service web-backend-service
 gcloud compute target-http-proxies create http-lb-proxy \
@@ -103,5 +104,5 @@ gcloud compute forwarding-rules create http-content-rule \
     --global \
     --target-http-proxy=http-lb-proxy \
     --ports=80
-echo "CHECK Create an HTTP load balancer"
+echo "CHECK!!! CHECK!!! CHECK!!! CHECK!!! CHECK!!!"
 echo "Lab ended!"
