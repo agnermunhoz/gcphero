@@ -1,4 +1,5 @@
 #!/bin/bash
+gcloud auth list
 read -p 'Enter compute region: ' REGION
 gcloud config set compute/region $REGION
 read -p 'Enter compute zone: ' ZONE
