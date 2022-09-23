@@ -1,8 +1,8 @@
 #!/bin/bash
 gcloud auth list
 gcloud config set compute/zone us-central1-b
+gsutil cp -r gs://spls/gsp021/* . &
 gcloud container clusters create io
-gsutil cp -r gs://spls/gsp021/* .
 cd orchestrate-with-kubernetes/kubernetes
 kubectl create deployment nginx --image=nginx:1.10.0
 kubectl expose deployment nginx --port 80 --type LoadBalancer
