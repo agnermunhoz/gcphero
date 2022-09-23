@@ -1,10 +1,11 @@
 #!/bin/bash
 gcloud auth list
-read -p 'Enter compute region: ' REGION
-gcloud config set compute/region $REGION
+#read -p 'Enter compute region: ' REGION
 read -p 'Enter compute zone: ' ZONE
-gcloud config set compute/zone $REGION-$ZONE
-gcloud container clusters create --machine-type=e2-medium --zone=$REGION-$ZONE lab-cluster 
+REGION=${ZONE::-2}
+gcloud config set compute/region $REGION
+gcloud config set compute/zone $ZONE
+gcloud container clusters create --machine-type=e2-medium --zone=$ZONE lab-cluster 
 echo 'Check "Create a GKE cluster"'
 gcloud container clusters get-credentials lab-cluster 
 kubectl create deployment hello-server --image=gcr.io/google-samples/hello-app:1.0
