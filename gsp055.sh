@@ -1,5 +1,5 @@
 #!/bin/bash
-PROJECT-ID=$(gcloud config get project)
+PROJECTID=$(gcloud config get project)
 mkdir test && cd test
 cat > Dockerfile <<EOF
 # Use an official Node runtime as the parent image
@@ -31,7 +31,7 @@ process.on('SIGINT', function() {
 });
 EOF
 docker build -t node-app:0.2 .
-docker tag node-app:0.2 gcr.io/$PROJECT-ID/node-app:0.2
-docker push gcr.io/$PROJECT-ID/node-app:0.2
+docker tag node-app:0.2 gcr.io/$PROJECTID/node-app:0.2
+docker push gcr.io/$PROJECTID/node-app:0.2
 read -p 'Check "Publish your container image to Container Registry"' CONTINUE
 echo "Lab ended!"
