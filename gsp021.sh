@@ -6,10 +6,6 @@ gsutil cp -r gs://spls/gsp021/* .
 cd orchestrate-with-kubernetes/kubernetes
 kubectl create deployment nginx --image=nginx:1.10.0
 kubectl expose deployment nginx --port 80 --type LoadBalancer
-while echo "$(kubectl get services)" | grep -q "pending"; do
-   sleep 1
-   echo "Waiting for Service to be ready......................."
-done
 read -p 'Check "Create a Kubernetes cluster and launch Nginx container"' CONTINUE
 kubectl create -f pods/monolith.yaml
 cd ~/orchestrate-with-kubernetes/kubernetes
@@ -30,10 +26,6 @@ kubectl create -f services/hello.yaml
 kubectl create configmap nginx-frontend-conf --from-file=nginx/frontend.conf
 kubectl create -f deployments/frontend.yaml
 kubectl create -f services/frontend.yaml
-while echo "$(kubectl get services)" | grep -q "pending"; do
-   sleep 1
-   echo "Waiting for Service to be ready......................."
-done
 read -p 'Check "Creating Deployments (Auth, Hello and Frontend)"' CONTINUE
 
 echo "Lab ended!"
