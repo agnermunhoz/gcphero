@@ -1,5 +1,5 @@
 #!/bin/bash
-read -p 'Enter compute zone' ZONE
+read -p 'Enter compute zone: ' ZONE
 gcloud config set compute/zone $ZONE
 gsutil -m cp -r gs://spls/gsp053/orchestrate-with-kubernetes .
 cd orchestrate-with-kubernetes/kubernetes
